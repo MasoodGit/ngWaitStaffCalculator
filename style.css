@@ -1,0 +1,31 @@
+.container {
+  margin:25px auto;
+  width: 720px;
+  border:1px solid rgba(237, 236, 236, 1);
+}
+
+.blank-row {
+  margin-top: 25px;
+}
+
+.right-margin{
+  margin-right: 25px;
+}
+
+.top-margin {
+  margin-top: 25px;
+}
+
+.bottom-margin {
+  margin-bottom: 15px;
+}
+
+.help-block {
+  color: red;
+  font-size: 12px;
+}
+
+.border-bottom {
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(237, 236, 236, 1);
+}
