@@ -1,0 +1,30 @@
+    <div class="col-md-6">
+      <h3 class="text-center border-bottom">My Earnings Info</h3>
+            <div class="blank-row"></div>
+
+       <div class="form-horizontal">
+       <div class="form-group">
+        <label for="tipTotal" class="control-label col-sm-4">Tip Total</label>
+        <div class="col-sm-8">
+          <span id="tipTotal" class="form-control col-sm-8" readonly>{{earnings.tipTotal | number:2}}</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="mealCount" class="control-label col-sm-4">Meal Count</label>
+        <div class="col-sm-8">
+          <span id="mealCount" class="form-control col-sm-8" readonly>
+          {{earnings.mealCount | number:0}}</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="avgTipPerMeal" class="control-label col-sm-4">Average Tip Per Meal</label>
+        <div class="col-sm-8">
+          <span id="avgTipPerMeal" class="form-control col-sm-8" readonly>
+          {{ earnings.tipTotal / earnings.mealCount | number:2 }} </span>
+        </div>
+      </div>
+      </div>
+      <div class="bottom-margin clearfix">
+        <button class="btn btn-primary pull-right" ng-click="resetWaitStaffCalculator()">Reset</button>
+      </div>
+      </div>
