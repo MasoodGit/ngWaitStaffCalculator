@@ -1,98 +1,96 @@
-angular.module("waitStaffApp",['ngMessages'])
-.controller("waitStaffController",function($scope) {
+var waitStaffApp = angular.module("waitStaffApp",['ngMessages','ngRoute']);
 
-$scope.mealDetails = {
-  basePrice:"",
-  taxRate:"",
-  tipPercentage:""
-}
+waitStaffApp.run(function($rootScope,$location){
+  $rootScope.$on('$routeChangeError', function(){
+    $location.path('/error');
+  });
+});
 
-$scope.customerCharges = {
-  subtotal:0.0,
-  tipAmount:0.0
-}
+waitStaffApp.config(function($routeProvider) {
+  $routeProvider
+  .when('/', {
+    templateUrl: 'home.tpl.html'
+  })
+  .when('/newMeal',{
+    templateUrl: 'newMeal.tpl.html',
+    controller: 'WaitStaffController as WaitStaff'
+  })
+  .when('/myEarnings',{
+    templateUrl: 'myEarnings.tpl.html',
+    controller: 'MyEarningsController as Earnings'
+  })
+  .when('/error',{
+    template: '<p>Error - Missing this Page...</p>'
+  })
+  .otherwise('/error');
+});
 
-$scope.earnings = {
-  tipTotal:0.0,
-  mealCount:0.0
-}
 
-/* 
- * sets the object properties to zero.
+/*
+ * WaitStaffController :
  */
-function clear (obj) {
-  for(var prop in obj) {
-    obj[prop] = 0.0;
+waitStaffApp.controller("WaitStaffController",function($scope,myEarningsService) {
+
+  var self = this;
+  self.mealDetails = myEarningsService.mealDetails;
+  self.myEarnings = myEarningsService.myEarnings;
+  self.customercharges = myEarningsService.customercharges;
+
+  self.resetMealDetails();
+
+  /*
+   * calculates customercharges and waitstaff earnings
+   * if the form is valid
+   */
+  self.mealDetailsFormSubmit = function() {
+    if($scope.mealDetailsForm.$valid) {
+      myEarningsService.updateCustomerCharges();
+      myEarningsService.updateEarnings();
+    }
   };
-}
 
-/* 
- * sets the object properties to empty string.
- * makes the form clean ( reset )
+  /*
+   * triggers field validation if form is
+   * submitted or if the field is blur
+   */
+  self.interacted = function(field) {
+    return $scope.mealDetailsForm.$submitted || field.$touched;
+  };
+
+  /*
+   * called when user clicks cancel on
+   * the MealDetailsFormh
+   */
+  self.resetMealDetails = function() {
+    myEarningsService.resetMealDetails();
+  };
+
+  /*
+   * calculates the customer charges
+   */
+  updateCustomerCharges = function() {
+    myEarningsService.updateCustomerCharges();
+  };
+
+  /*
+   * calculates the earning for the waitstaff
+   */
+  updateEarnings = function() {
+    myEarningsService.updateEarnings();
+  };
+});
+
+/*
+ * MyEarningsController :
  */
-function clearMealDetails(mealDetails) {
-  $scope.mealDetailsForm.$setUntouched();
-  mealDetails.basePrice = "";
-  mealDetails.taxRate = "";
-  mealDetails.tipPercentage = "";
-  $scope.mealDetailsForm.$setPristine();
-}
+waitStaffApp.controller('MyEarningsController',function(myEarningsService) {
+  var self = this;
 
-/* 
- * calculates the customer charges
- */
-updateCustomerCharges = function() {
-  var basePrice = $scope.mealDetails.basePrice;
-  var taxRate = $scope.mealDetails.taxRate;
-  var tipPercentage = $scope.mealDetails.tipPercentage;
-
-  $scope.customerCharges.subtotal = basePrice + (basePrice * (taxRate/100 ));
-  $scope.customerCharges.tipAmount = basePrice * (tipPercentage/100);
-}
-
-/* 
- * calculates the earning for the waitstaff
- */
-updateEarnings = function(){
-  $scope.earnings.tipTotal = $scope.earnings.tipTotal +
-                             $scope.customerCharges.tipAmount;
-  $scope.earnings.mealCount++;
-}
-
-/* 
- * calculates customercharges and waitstaff earnings
- * if the form is valid
- */
-$scope.mealDetailsFormSubmit = function() {
-  if($scope.mealDetailsForm.$valid) {
-    updateCustomerCharges();
-    updateEarnings();
-  }
-};
-
-/* 
- * triggers field validation if form is 
- * submitted or if the field is blur 
- */
-$scope.interacted = function(field) {
-  return $scope.mealDetailsForm.$submitted || field.$touched;
-};
-
-/* 
- * called when user clicks cancel on 
- * the MealDetailsForm
- */
-$scope.resetMealDetails = function() {
-  clearMealDetails($scope.mealDetails);
-}
-
-/* 
- * resets everything on the App
- */
-$scope.resetWaitStaffCalculator = function() {
-  clearMealDetails($scope.mealDetails);
-  clear($scope.customerCharges);
-  clear($scope.earnings);
-}
+  /*
+  * resets everything on the App
+  */
+  EarningsController.resetWaitStaffCalculator = function() {
+    myEarningsService.resetWaitStaffCalculator();
+  };
 
 });
