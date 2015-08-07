@@ -30,15 +30,19 @@ waitStaffApp.config(function($routeProvider) {
  * WaitStaffController :
  */
 waitStaffApp.controller("WaitStaffController",function($scope,myEarningsService) {
-  var WaitStaffController = this;
-  WaitStaffController.data = myEarningsService;
-  myEarningsService.resetMealDetails();
+
+  var self = this;
+  self.mealDetails = myEarningsService.mealDetails;
+  self.myEarnings = myEarningsService.myEarnings;
+  self.customercharges = myEarningsService.customercharges;
+
+  self.resetMealDetails();
 
   /*
    * calculates customercharges and waitstaff earnings
    * if the form is valid
    */
-  $scope.mealDetailsFormSubmit = function() {
+  self.mealDetailsFormSubmit = function() {
     if($scope.mealDetailsForm.$valid) {
       myEarningsService.updateCustomerCharges();
       myEarningsService.updateEarnings();
@@ -49,15 +53,15 @@ waitStaffApp.controller("WaitStaffController",function($scope,myEarningsService)
    * triggers field validation if form is
    * submitted or if the field is blur
    */
-  WaitStaffController.interacted = function(field) {
+  self.interacted = function(field) {
     return $scope.mealDetailsForm.$submitted || field.$touched;
   };
 
   /*
    * called when user clicks cancel on
-   * the MealDetailsForm
+   * the MealDetailsFormh
    */
-  WaitStaffController.resetMealDetails = function() {
+  self.resetMealDetails = function() {
     myEarningsService.resetMealDetails();
   };
 
@@ -80,8 +84,8 @@ waitStaffApp.controller("WaitStaffController",function($scope,myEarningsService)
  * MyEarningsController :
  */
 waitStaffApp.controller('MyEarningsController',function(myEarningsService) {
-  var EarningsController = this;
-  EarningsController.data = myEarningsService;
+  var self = this;
+
   /*
   * resets everything on the App
   */
